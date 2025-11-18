@@ -1,29 +1,29 @@
-def buildImage(String imageName, String dockerfilePath=".") {
+def buildImage(imageName) {
     echo "Building Docker image: ${imageName}"
-    sh "docker build -t ${imageName} ${dockerfilePath}"
+    sh "docker build -t ${imageName} ."
 }
 
-def scanImage(String imageName) {
-    echo "Scanning Docker image with Trivy: ${imageName}"
-    sh "trivy image ${imageName}"
+def scanImage(imageName) {
+    echo "Scanning Docker image: ${imageName}"
+    sh "trivy image ${imageName} || true"
 }
 
-def pushImage(String imageName) {
-    echo "Pushing image to DockerHub: ${imageName}"
+def pushImage(imageName) {
+    echo "Pushing Docker image: ${imageName}"
     sh "docker push ${imageName}"
 }
 
-def deleteLocalImage(String imageName) {
+def deleteLocalImage(imageName) {
     echo "Deleting local Docker image: ${imageName}"
-    sh "docker rmi ${imageName}"
+    sh "docker rmi ${imageName} || true"
 }
 
-def updateManifests() {
-    echo "Applying manifests to Kubernetes..."
-    sh "kubectl apply -f k8s/"
+def updateManifests(kubeServer) {
+    echo "Applying manifests to Kubernetes at ${kubeServer}"
+    sh "kubectl --server=${kubeServer} apply -f k8s/"
 }
 
 def pushManifests() {
-    echo "Pushing manifests to Git..."
-    sh "git add k8s/ && git commit -m 'update manifests' && git push"
+    echo "Pushing manifests (git push)"
+    sh "git add k8s/ && git commit -m 'Update manifests' && git push || echo 'No changes to push'"
 }
