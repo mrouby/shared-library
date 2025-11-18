@@ -20,5 +20,5 @@ def updateManifests() {
 
 def pushManifests() {
     echo "Pushing manifests to repository..."
-    // إذا عندك خطوات push، هنا تتحط
+
 }
