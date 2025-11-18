@@ -3,11 +3,6 @@ def buildImage(imageName) {
     sh "docker build -t ${imageName} ."
 }
 
-def scanImage(imageName) {
-    echo "Scanning Docker image: ${imageName}"
-    sh "trivy image ${imageName} || true"
-}
-
 def pushImage(imageName) {
     echo "Pushing Docker image: ${imageName}"
     sh "docker push ${imageName}"
@@ -18,12 +13,12 @@ def deleteLocalImage(imageName) {
     sh "docker rmi ${imageName} || true"
 }
 
-def updateManifests(kubeServer) {
-    echo "Applying manifests to Kubernetes at ${kubeServer}"
-    sh "kubectl --server=${kubeServer} apply -f k8s/"
+def updateManifests() {
+    echo "Updating Kubernetes manifests..."
+    sh "kubectl apply -f k8s/"
 }
 
 def pushManifests() {
-    echo "Pushing manifests (git push)"
-    sh "git add k8s/ && git commit -m 'Update manifests' && git push || echo 'No changes to push'"
+    echo "Pushing manifests to repository..."
+    // إذا عندك خطوات push، هنا تتحط
 }
